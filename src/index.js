@@ -10,7 +10,11 @@ const Navigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen component={Transactions} name="Transactions" />
+        <Stack.Screen
+          component={Transactions}
+          name="Transactions"
+          options={{ title: 'Transactions', headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )
