@@ -4,6 +4,7 @@ const theme = {
   cardColor: '#ECF0F1',
   greenColor: '#1ABC9C',
   redColor: '#E55039',
+  lightRedColor: '#E07E7E',
   darkBlueColor: '#0A3D62',
   // metrics
   smallSpacing: 5,

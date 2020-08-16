@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   SafeAreaView,
   View,
@@ -7,14 +8,17 @@ import {
   TouchableOpacity
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
+import currency from 'currency.js'
+import { Creators as Actions } from '../../store/transactions'
 
 import TransactionItem from '../../components/TransactionItem'
-import TransactionFooter from '../../components/TransactionFooter'
 
 import styles from './styles'
 
 const Transactions = () => {
-  const [data, setData] = useState({ transactions: [], total: 0 })
+  // const [data, setData] = useState({ transactions: [], total: 0 })
+  const data = useSelector((state) => state.transactions)
+  const dispatch = useDispatch()
 
   // load
   useEffect(() => {
@@ -42,17 +46,17 @@ const Transactions = () => {
 
   const loadTransactions = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem('@transaction_data')
-      const data = JSON.parse(jsonValue)
+      const json = await AsyncStorage.getItem('@transaction_data')
+      const storageData = JSON.parse(json)
 
-      if (data === null) return
+      if (storageData === null) return
 
-      console.log(data)
-
-      setData({
-        transactions: data.transactions,
-        total: data.total
-      })
+      dispatch(
+        Actions.setTransactions({
+          transactions: storageData.transactions,
+          total: storageData.total
+        })
+      )
     } catch (e) {
       console.error(e)
     }
@@ -60,12 +64,15 @@ const Transactions = () => {
 
   const renderItem = ({ item }) => {
     return (
-      <TransactionItem name={item.name} value={item.value} date={item.date} />
+      <TransactionItem
+        id={item.id}
+        name={item.name}
+        type={item.type}
+        category={item.category}
+        value={item.value}
+        date={item.date}
+      />
     )
-  }
-
-  const renderFooter = () => {
-    return <TransactionFooter value={data.total} />
   }
 
   return (
@@ -82,20 +89,47 @@ const Transactions = () => {
           data={data.transactions}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
-          ListFooterComponent={renderFooter}
+          contentContainerStyle={
+            data.transactions?.length === 0 && styles.emptyList
+          }
+          ListEmptyComponent={() => (
+            <Text style={styles.emptyListTitle}>No transactions</Text>
+          )}
         />
       </View>
       <View style={[styles.card, styles.bar]}>
         <Text style={styles.balanceTitle}>BALANCE</Text>
-        <Text style={styles.balanceValue(data.total)}>${data.total}</Text>
+        <Text style={styles.balanceValue(data.total)}>
+          {currency(data.total, {
+            symbol: 'R$ ',
+            separator: '.',
+            decimal: ','
+          }).format()}
+        </Text>
       </View>
-      {/* <TouchableOpacity
-        onPress={async () =>
-          saveTransaction({ date: '1111', name: 'nome', value: 123 })
-        }
+      <TouchableOpacity
+        onPress={async () => {
+          let rnd = Math.random() < 0.5
+
+          saveTransaction({
+            id: Math.random() * 1000000,
+            date: new Date(),
+            name: 'nome',
+            type: rnd < 0.5 ? 'withdraw' : 'deposit',
+            category: 'UTILITIES',
+            value: rnd < 0.5 ? -Math.random() * 2001 : Math.random() * 2001
+          })
+        }}
       >
         <Text>ADD</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          await AsyncStorage.clear()
+        }}
+      >
+        <Text>CLEAR</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   )
 }

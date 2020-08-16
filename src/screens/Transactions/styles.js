@@ -26,13 +26,26 @@ const styles = StyleSheet.create({
     height: 50
   },
   listWrapper: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center'
+    // alignItems: 'center'
   },
   list: {
     flex: 1,
     margin: theme.mediumSpacing,
     borderRadius: theme.mediumRadius,
     backgroundColor: theme.cardColor
+  },
+  emptyList: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '90%'
+  },
+  emptyListTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    color: theme.darkBlueColor
   },
   title: {
     color: theme.darkBlueColor,
