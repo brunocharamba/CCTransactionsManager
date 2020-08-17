@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { theme } from '../../globals'
 
 const styles = StyleSheet.create({
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   formGroupInput: {
     backgroundColor: theme.whiteColor,
     borderRadius: 2,
-    height: 33,
+    height: Platform.OS === 'ios' ? 33 : 36,
     marginTop: theme.smallSpacing,
     paddingHorizontal: theme.mediumSpacing,
     color: theme.darkBlueColor,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   formGroupValue: (type) => ({
     backgroundColor: theme.whiteColor,
     borderRadius: 2,
-    height: 33,
+    height: Platform.OS === 'ios' ? 33 : 36,
     marginTop: theme.smallSpacing,
     paddingHorizontal: theme.mediumSpacing,
     color: type === 'withdraw' ? theme.redColor : theme.greenColor,

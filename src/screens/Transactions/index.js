@@ -127,19 +127,6 @@ const Transactions = ({ navigation }) => {
           }).format()}
         </Text>
       </View>
-      <TouchableOpacity
-        onPress={async () => {
-          await AsyncStorage.clear()
-          dispatch(
-            Actions.setTransactions({
-              transactions: [],
-              total: 0
-            })
-          )
-        }}
-      >
-        <Text>LIMPAR</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   )
 }

@@ -1,7 +1,7 @@
 const theme = {
   // colors
   whiteColor: '#fff',
-  backgroundColor: '#E58E26',
+  backgroundColor: '#1289A7',
   cardColor: '#ECF0F1',
   greenColor: '#1ABC9C',
   redColor: '#E55039',
