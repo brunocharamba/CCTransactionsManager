@@ -15,12 +15,12 @@ import TransactionItem from '../../components/TransactionItem'
 
 import styles from './styles'
 
-const Transactions = () => {
+const Transactions = ({ navigation }) => {
   // const [data, setData] = useState({ transactions: [], total: 0 })
   const data = useSelector((state) => state.transactions)
   const dispatch = useDispatch()
 
-  // load
+  // ao renderizar, carregar as transações
   useEffect(() => {
     const load = async () => {
       await loadTransactions()
@@ -28,22 +28,35 @@ const Transactions = () => {
     load()
   }, [])
 
-  const saveTransaction = async (transaction) => {
-    try {
-      const json = JSON.stringify({
+  // quando houver mudança nos dados, salva no async storage
+  useEffect(() => {
+    const save = async () => {
+      try {
+        const json = JSON.stringify({
+          transactions: data.transactions,
+          total: data.total
+        })
+
+        await AsyncStorage.setItem('@transaction_data', json)
+      } catch (e) {
+        console.error(e)
+        // saving error
+      }
+    }
+    save()
+  }, [data])
+
+  // adiciona a transação no redux
+  const saveTransaction = (transaction) => {
+    dispatch(
+      Actions.setTransactions({
         transactions: [...data.transactions, transaction],
         total: data.total + transaction.value
       })
-
-      await AsyncStorage.setItem('@transaction_data', json)
-
-      await loadTransactions()
-    } catch (e) {
-      console.error(e)
-      // saving error
-    }
+    )
   }
 
+  // carrega as informações do async storage no estado do redux
   const loadTransactions = async () => {
     try {
       const json = await AsyncStorage.getItem('@transaction_data')
@@ -51,9 +64,13 @@ const Transactions = () => {
 
       if (storageData === null) return
 
+      // ordenar
+      var orderedTransactions = storageData.transactions
+      orderedTransactions.sort((a, b) => new Date(b.date) - new Date(a.date))
+
       dispatch(
         Actions.setTransactions({
-          transactions: storageData.transactions,
+          transactions: orderedTransactions,
           total: storageData.total
         })
       )
@@ -78,8 +95,11 @@ const Transactions = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={[styles.card, styles.bar]}>
-        <Text style={styles.title}>TRANSACTIONS</Text>
-        <TouchableOpacity style={styles.addButton} onPress={() => {}}>
+        <Text style={styles.title}>TRANSAÇÕES</Text>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => navigation.navigate('AddTransaction')}
+        >
           <Text style={styles.textButton}>+</Text>
         </TouchableOpacity>
       </View>
@@ -93,12 +113,12 @@ const Transactions = () => {
             data.transactions?.length === 0 && styles.emptyList
           }
           ListEmptyComponent={() => (
-            <Text style={styles.emptyListTitle}>No transactions</Text>
+            <Text style={styles.emptyListTitle}>Sem transações</Text>
           )}
         />
       </View>
       <View style={[styles.card, styles.bar]}>
-        <Text style={styles.balanceTitle}>BALANCE</Text>
+        <Text style={styles.balanceTitle}>SALDO</Text>
         <Text style={styles.balanceValue(data.total)}>
           {currency(data.total, {
             symbol: 'R$ ',
@@ -109,26 +129,16 @@ const Transactions = () => {
       </View>
       <TouchableOpacity
         onPress={async () => {
-          let rnd = Math.random() < 0.5
-
-          saveTransaction({
-            id: Math.random() * 1000000,
-            date: new Date(),
-            name: 'nome',
-            type: rnd < 0.5 ? 'withdraw' : 'deposit',
-            category: 'UTILITIES',
-            value: rnd < 0.5 ? -Math.random() * 2001 : Math.random() * 2001
-          })
-        }}
-      >
-        <Text>ADD</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={async () => {
           await AsyncStorage.clear()
+          dispatch(
+            Actions.setTransactions({
+              transactions: [],
+              total: 0
+            })
+          )
         }}
       >
-        <Text>CLEAR</Text>
+        <Text>LIMPAR</Text>
       </TouchableOpacity>
     </SafeAreaView>
   )

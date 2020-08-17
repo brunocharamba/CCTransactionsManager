@@ -8,8 +8,9 @@ import renderer from 'react-test-renderer'
 
 jest.useFakeTimers()
 
-const middlewares = []
-const mockStore = configureStore(middlewares)
+// const middlewares = []
+// const mockStore = configureStore(middlewares)
+const mockStore = configureStore()
 const setTransactions = () => ({ type: 'SET_TRANSACTIONS' })
 
 const listData = {
@@ -92,17 +93,5 @@ describe('testing Transactions component', () => {
       .toJSON()
     expect(props.data.length).toEqual(listData.transactions.length)
     expect(props.data[0].name).toEqual(listData.transactions[0].name)
-  })
-})
-
-describe('testing Redux actions', () => {
-  it('should save transactions in redux state', () => {
-    const store = mockStore(listData)
-
-    store.dispatch(setTransactions())
-
-    const actions = store.getActions()
-    const payload = { type: 'SET_TRANSACTIONS' }
-    expect(actions).toEqual([payload])
   })
 })

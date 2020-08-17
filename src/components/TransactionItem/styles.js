@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderColor: theme.darkBlueColor,
     borderRightWidth: 1.5,
-    paddingRight: theme.mediumSpacing
+    paddingRight: theme.mediumSpacing,
+    width: 60
   },
   dateTop: {
     fontWeight: 'bold',

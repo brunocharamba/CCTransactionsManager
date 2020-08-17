@@ -5,6 +5,9 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import Store from './store'
 import Transactions from './screens/Transactions'
+import AddTransaction from './screens/AddTransaction'
+
+import { theme } from './globals'
 
 const Stack = createStackNavigator()
 
@@ -16,7 +19,14 @@ const Navigation = () => {
           <Stack.Screen
             component={Transactions}
             name="Transactions"
-            options={{ title: 'Transactions', headerShown: false }}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            component={AddTransaction}
+            name="AddTransaction"
+            options={{
+              title: 'ADICIONAR TRANSAÇÃO'
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>
