@@ -116,12 +116,12 @@ const AddTransaction = ({ navigation }) => {
             onValueChange={(value) => setFormData({ ...formData, type: value })}
             items={[
               {
-                label: 'Deposit',
+                label: 'Entrada',
                 value: 'deposit',
                 color: styles.greenColor.color
               },
               {
-                label: 'Withdraw',
+                label: 'Saída',
                 value: 'withdraw',
                 color: styles.redColor.color
               }
@@ -142,11 +142,11 @@ const AddTransaction = ({ navigation }) => {
               setFormData({ ...formData, category: value })
             }
             items={[
-              { label: 'Services', value: 'services' },
-              { label: 'Food', value: 'food' },
-              { label: 'Utilities', value: 'utilities' },
-              { label: 'Taxes', value: 'taxes' },
-              { label: 'Income', value: 'income' }
+              { label: 'Serviços', value: 'services' },
+              { label: 'Alimentação', value: 'food' },
+              { label: 'Utilidades', value: 'utilities' },
+              { label: 'Impostos', value: 'taxes' },
+              { label: 'Receita', value: 'income' }
             ]}
           />
         </View>
